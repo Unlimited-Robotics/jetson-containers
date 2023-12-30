@@ -27,7 +27,7 @@ RUN apt-get update && \
     && apt-get clean
 
 # https://github.com/IntelRealSense/librealsense/issues/11931
-ARG LIBREALSENSE_VERSION=development
+ARG LIBREALSENSE_VERSION=v2.43.0
 
 RUN git clone --branch ${LIBREALSENSE_VERSION} --depth=1 https://github.com/IntelRealSense/librealsense && \
     cd librealsense && \
@@ -35,7 +35,7 @@ RUN git clone --branch ${LIBREALSENSE_VERSION} --depth=1 https://github.com/Inte
     cd build && \
     cmake \
         -DBUILD_EXAMPLES=true \
-	   -DFORCE_RSUSB_BACKEND=true \
+	   -DFORCE_RSUSB_BACKEND=false \
 	   -DBUILD_WITH_CUDA=true \
 	   -DCMAKE_BUILD_TYPE=release \
 	   -DBUILD_PYTHON_BINDINGS=bool:true \
@@ -47,7 +47,7 @@ RUN git clone --branch ${LIBREALSENSE_VERSION} --depth=1 https://github.com/Inte
     cd ../ && \
     cp ./config/99-realsense-libusb.rules /etc/udev/rules.d/ && \
     rm -rf librealsense
-  
+
 RUN python3 -c 'import pyrealsense2'
 
 #RUN udevadm control --reload-rules && udevadm trigger
