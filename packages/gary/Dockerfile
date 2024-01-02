@@ -1,7 +1,7 @@
 #---
 # name: gary
 # group: base
-# depends: [pytorch, torchvision, torchaudio, torch2trt, opencv_ffmpeg, pycuda, realsense, zed, ros:humble-desktop, nav2, rtabmap, moveit]
+# depends: [pytorch, torchvision, torchaudio, torch2trt, opencv_ffmpeg, pycuda, realsense, zed, ros:humble-desktop, nav2, rtabmap]
 # postfix: 3.7.0.dev
 #---
 ARG BASE_IMAGE
