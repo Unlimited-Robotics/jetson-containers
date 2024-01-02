@@ -30,6 +30,8 @@ RUN source /opt/ros/humble/install/setup.bash && \
         octomap_msgs \
         octomap \
         pcl_ros \
+        pcl_conversions \
+        octomap_msgs \
         > packages_to_install.rosinstall && \
     ros2 pkg list > installed_packages.list && \
     /filter_ros_packages.py && \
@@ -85,6 +87,63 @@ RUN rm /bin/sh && ln -s /bin/bash /bin/sh
 # ros2 seems not sourcing by default its multi-arch folders
 ENV LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/opt/ros/humble/lib/x86_64-linux-gnu:/opt/ros/humble/lib/aarch64-linux-gnu
 
+# gtsam v4.1.1
+RUN mkdir -p /opt/raya_os/repos/gtsam && \
+    cd /opt/raya_os/repos/gtsam && \
+    git init && \
+    git remote add origin https://github.com/borglab/gtsam && \
+    git fetch --depth 1 --verbose --progress origin 69a3a75195b65356d6e56669e5199d325c7962c9 && \
+    git checkout FETCH_HEAD && \
+    cd /opt/raya_os/repos/gtsam && \
+    mkdir build && cd build && \
+    cmake -DGTSAM_BUILD_WITH_MARCH_NATIVE=OFF -DGTSAM_USE_SYSTEM_EIGEN=ON .. && \
+    make -j$([[ $CI == "true" ]] && echo $(($(nproc) > 1 ? $(nproc) : 1)) || echo $(((($(nproc)-1)) > 1 ? (($(nproc)-1)) : 1))) && \
+    make install && \
+    rm -r /opt/raya_os/repos/
+
+# libnabo v1.0.7
+RUN mkdir -p /opt/raya_os/repos/libnabo && \
+    cd /opt/raya_os/repos/libnabo && \
+    git init && \
+    git remote add origin https://github.com/ethz-asl/libnabo && \
+    git fetch --depth 1 --verbose --progress origin d4f45e2b2f9b811344cd5002346b9fb52ac2520e && \
+    git checkout FETCH_HEAD && \
+    cd /opt/raya_os/repos/libnabo && \
+    mkdir build && cd build && \
+    cmake .. && \
+    make -j$([[ $CI == "true" ]] && echo $(($(nproc) > 1 ? $(nproc) : 1)) || echo $(((($(nproc)-1)) > 1 ? (($(nproc)-1)) : 1))) && \
+    make install && \
+    rm -r /opt/raya_os/repos/
+
+# libpointmatcher v1.3.1
+RUN mkdir -p /opt/raya_os/repos/libpointmatcher && \
+    cd /opt/raya_os/repos/libpointmatcher && \
+    git init && \
+    git remote add origin https://github.com/ethz-asl/libpointmatcher && \
+    git fetch --depth 1 --verbose --progress origin eaece708ceda032501568563a91eeb3d71a5ca8d && \
+    git checkout FETCH_HEAD && \
+    cd /opt/raya_os/repos/libpointmatcher && \
+    mkdir build && cd build && \
+    cmake .. && \
+    make -j$([[ $CI == "true" ]] && echo $(($(nproc) > 1 ? $(nproc) : 1)) || echo $(((($(nproc)-1)) > 1 ? (($(nproc)-1)) : 1))) && \
+    make install && \
+    rm -r /opt/raya_os/repos/
+
+# g2o v20201223_git
+RUN mkdir -p /opt/raya_os/repos/g2o && \
+    cd /opt/raya_os/repos/g2o && \
+    git init && \
+    git remote add origin https://github.com/RainerKuemmerle/g2o && \
+    git fetch --depth 1 --verbose --progress origin b1ba729aa569267e179fa2e237db0b3ad5169e2e && \
+    git checkout FETCH_HEAD && \
+    cd /opt/raya_os/repos/g2o && \
+    mkdir build && cd build && \
+    cmake -DBUILD_WITH_MARCH_NATIVE=OFF -DG2O_BUILD_APPS=OFF -DG2O_BUILD_EXAMPLES=OFF -DG2O_USE_OPENGL=OFF .. && \
+    make -j$([[ $CI == "true" ]] && echo $(($(nproc) > 1 ? $(nproc) : 1)) || echo $(((($(nproc)-1)) > 1 ? (($(nproc)-1)) : 1))) && \
+    make install && \
+    rm -r /opt/raya_os/repos/
+
+## master branch on 19 Dec 2023: e619c577595ad221890d550ea3dbe6cbdebe9502
 # 0.20.23-humble:  95e6a9f03936697a60be2c26e119c519e47c11f5
 # 0.21.0-humble:   a406c3775099f351eec9474a5432e9356ce53e95
 # 0.21.1-humble:   0070de4aafab0feaf5e37b497b1354d2264d41c8
@@ -95,7 +154,7 @@ RUN source /ros_entrypoint.sh && \
     git checkout e619c577595ad221890d550ea3dbe6cbdebe9502 && \
     cd build/ && \
     cmake -DWITH_OPENGV=ON .. && \
-    make -j$(nproc) && \
+    make -j$([[ $CI == "true" ]] && echo $(($(nproc) > 1 ? $(nproc) : 1)) || echo $(((($(nproc)-1)) > 1 ? (($(nproc)-1)) : 1))) && \
     make install && \
     cd ../.. && \
     rm -rf rtabmap && \

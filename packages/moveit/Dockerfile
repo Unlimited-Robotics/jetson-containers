@@ -21,16 +21,42 @@ ENV LANG=en_US.UTF-8
 ENV PYTHONIOENCODING=utf-8
 ENV LD_PRELOAD=$LD_PRELOAD:'/usr/lib/aarch64-linux-gnu/libgomp.so.1'
 
-RUN mkdir -p ${ROS_ROOT}/src && \
+RUN source /opt/ros/humble/install/setup.bash && \
+    mkdir -p ${ROS_ROOT}/src && \
     cd ${ROS_ROOT} && \
     rosinstall_generator --deps --rosdistro ${ROS_DISTRO} \
             moveit \
-        > ros2.${ROS_DISTRO}.ros_base.rosinstall && \
-    vcs import src < ros2.${ROS_DISTRO}.ros_base.rosinstall && \
+            controller_manager_msgs \
+            control_toolbox \
+        > packages_to_install.rosinstall && \
+    ros2 pkg list > installed_packages.list && \
+    /filter_ros_packages.py && \
+    echo "" && \
+    echo "--- ROS INSTALL GENERATOR FILTERED ---" && \
+    echo "PACKAGES TO INSTALL:" && \
+    cat packages_to_install.filtered.rosinstall && \
+    echo "" && \
+    vcs import src < packages_to_install.filtered.rosinstall && \
     apt-get update && \
     rosdep update && \
-    rosdep install -y --ignore-src --from-paths src --rosdistro ${ROS_DISTRO} --skip-keys "fastcdr rti-connext-dds-6.0.1 rti-connext-dds-5.3.1 urdfdom_headers libopencv-dev libopencv-contrib-dev libopencv-imgproc-dev python-opencv python3-opencv" && \
-    colcon build --merge-install --cmake-args -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=OFF -DCMAKE_EXPORT_COMPILE_COMMANDS=ON --ament-cmake-args -DCMAKE_BUILD_TYPE=Release && \
+    rosdep install -y --ignore-src --from-paths src --rosdistro ${ROS_DISTRO} \
+        --skip-keys "fastcdr rti-connext-dds-6.0.1 rti-connext-dds-5.3.1 \
+        urdfdom_headers libopencv-dev libopencv-contrib-dev \
+        libopencv-imgproc-dev python-opencv python3-opencv \
+        $(ros2 pkg list | tr '\n' ' ')" && \
+    rm -r src/moveit && \
+    cd ${ROS_ROOT}/src && \
+    git clone https://github.com/Unlimited-Robotics/moveit2 && \
+    cd ./moveit2/ && \
+    git checkout 442034885057978c3588e163a743efcacc5e6ae9 && \
+    cd ../.. && \
+    colcon build --merge-install --cmake-args -DCMAKE_BUILD_TYPE=Release \
+        -DBUILD_TESTING=OFF -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
+        --ament-cmake-args -DCMAKE_BUILD_TYPE=Release \
+        --packages-skip cyclonedds fastcdr fastrtps foonathan_memory_vendor \
+        google_benchmark_vendor gmock_vendor gtest_vendor iceoryx_binding_c \
+        iceoryx_hoofs iceoryx_posh osrf_testing_tools_cpp urdfdom \
+        urdfdom_headers $(ros2 pkg list | tr '\n' ' ') && \
     rm -Rf src build log ${ROS_ROOT}/ros2.${ROS_DISTRO}.ros_base.rosinstall && \
     rm -Rf /var/lib/apt/lists/* && \
     apt-get clean
