@@ -62,4 +62,14 @@ RUN source /opt/ros/humble/install/setup.bash && \
     rm -Rf /var/lib/apt/lists/* && \
     apt-get clean
 
+RUN mkdir -p /opt/raya_os/tools/ && \
+    cd /opt/raya_os/tools/ && \
+    git clone https://github.com/BehaviorTree/Groot.git && \
+    cd Groot && \
+    git submodule update --init --recursive && \
+    mkdir build && \
+    cd build && \
+    cmake .. && \
+    make
+
 COPY ros_entrypoint.sh /ros_entrypoint.sh
