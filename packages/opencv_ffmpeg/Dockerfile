@@ -9,7 +9,17 @@ FROM ${BASE_IMAGE}
 
 COPY loadsave.cpp /root
 
+RUN apt-get update && \
+    apt-get install -y \
+        libgtk2.0-dev \
+        libeigen3-dev \
+        liblapack-dev \
+        && \
+    rm -rf /var/lib/apt/lists/* && \
+    apt-get clean
+
 RUN mkdir -p /opt/opencv && \
+    cd /opt/opencv && \
     cd /opt/opencv && \
     wget -O opencv.zip https://github.com/opencv/opencv/archive/4.7.0.zip && \
     wget -O opencv_contrib.zip https://github.com/opencv/opencv_contrib/archive/4.7.0.zip && \
