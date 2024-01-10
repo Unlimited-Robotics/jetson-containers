@@ -39,10 +39,11 @@ RUN source /opt/ros/humble/install/setup.bash && \
     vcs import src < packages_to_install.filtered.rosinstall && \
     apt-get update && \
     rosdep update && \
+    apt-get install -y libfcl-dev && \
     rosdep install -y --ignore-src --from-paths src --rosdistro ${ROS_DISTRO} \
         --skip-keys "fastcdr rti-connext-dds-6.0.1 rti-connext-dds-5.3.1 \
         urdfdom_headers libopencv-dev libopencv-contrib-dev \
-        libopencv-imgproc-dev python-opencv python3-opencv \
+        libopencv-imgproc-dev python-opencv python3-opencv moveit_ros_benchmarks pilz_industrial_motion_planner \
         $(ros2 pkg list | tr '\n' ' ')" && \
     rm -r src/moveit && \
     cd ${ROS_ROOT}/src && \

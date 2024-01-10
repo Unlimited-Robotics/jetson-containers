@@ -87,12 +87,12 @@ RUN rm /bin/sh && ln -s /bin/bash /bin/sh
 # ros2 seems not sourcing by default its multi-arch folders
 ENV LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/opt/ros/humble/lib/x86_64-linux-gnu:/opt/ros/humble/lib/aarch64-linux-gnu
 
-# gtsam v4.1.1
+# gtsam v4.2.0
 RUN mkdir -p /opt/raya_os/repos/gtsam && \
     cd /opt/raya_os/repos/gtsam && \
     git init && \
     git remote add origin https://github.com/borglab/gtsam && \
-    git fetch --depth 1 --verbose --progress origin 69a3a75195b65356d6e56669e5199d325c7962c9 && \
+    git fetch --depth 1 --verbose --progress origin 4f66a491ffc83cf092d0d818b11dc35135521612 && \
     git checkout FETCH_HEAD && \
     cd /opt/raya_os/repos/gtsam && \
     mkdir build && cd build && \
