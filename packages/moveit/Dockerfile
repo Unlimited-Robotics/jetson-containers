@@ -45,11 +45,15 @@ RUN source /opt/ros/humble/install/setup.bash && \
         urdfdom_headers libopencv-dev libopencv-contrib-dev \
         libopencv-imgproc-dev python-opencv python3-opencv moveit_ros_benchmarks pilz_industrial_motion_planner \
         $(ros2 pkg list | tr '\n' ' ')" && \
-    rm -r src/moveit && \
+    rm -r src/moveit src/moveit_msgs && \
     cd ${ROS_ROOT}/src && \
     git clone https://github.com/Unlimited-Robotics/moveit2 && \
     cd ./moveit2/ && \
-    git checkout 442034885057978c3588e163a743efcacc5e6ae9 && \
+    git checkout 7eb951ec4db6d31af5f1495677a16dd9fd663778 && \
+    cd ../.. && \
+    git clone https://github.com/Unlimited-Robotics/moveit_msgs && \
+    cd ./moveit_msgs/ && \
+    git checkout 067829ecac4b3ee259a10fa7e2d5b17782f7bb0d && \
     cd ../.. && \
     colcon build --merge-install --cmake-args -DCMAKE_BUILD_TYPE=Release \
         -DBUILD_TESTING=OFF -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \

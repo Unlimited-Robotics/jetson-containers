@@ -96,7 +96,7 @@ RUN mkdir -p /opt/raya_os/repos/gtsam && \
     git checkout FETCH_HEAD && \
     cd /opt/raya_os/repos/gtsam && \
     mkdir build && cd build && \
-    cmake -DGTSAM_BUILD_WITH_MARCH_NATIVE=OFF -DGTSAM_USE_SYSTEM_EIGEN=ON .. && \
+    cmake -DGTSAM_BUILD_WITH_MARCH_NATIVE=ON -DGTSAM_USE_SYSTEM_EIGEN=ON .. && \
     make -j$([[ $CI == "true" ]] && echo $(($(nproc) > 1 ? $(nproc) : 1)) || echo $(((($(nproc)-1)) > 1 ? (($(nproc)-1)) : 1))) && \
     make install && \
     rm -r /opt/raya_os/repos/
@@ -143,15 +143,13 @@ RUN mkdir -p /opt/raya_os/repos/g2o && \
     make install && \
     rm -r /opt/raya_os/repos/
 
-## master branch on 19 Dec 2023: e619c577595ad221890d550ea3dbe6cbdebe9502
-# 0.20.23-humble:  95e6a9f03936697a60be2c26e119c519e47c11f5
-# 0.21.0-humble:   a406c3775099f351eec9474a5432e9356ce53e95
-# 0.21.1-humble:   0070de4aafab0feaf5e37b497b1354d2264d41c8
+# RTABMAP (UR VERSION)
+## gary branch 18 Jan 2024: 9362f744f683e2998b814b1247135a8f322e4dca
 RUN source /ros_entrypoint.sh && \
     cd /root && \
-    git clone https://github.com/introlab/rtabmap && \
+    git clone https://github.com/unlimited-robotics/rtabmap && \
     cd rtabmap/ && \
-    git checkout e619c577595ad221890d550ea3dbe6cbdebe9502 && \
+    git checkout 9362f744f683e2998b814b1247135a8f322e4dca && \
     cd build/ && \
     cmake -DWITH_OPENGV=ON .. && \
     make -j$([[ $CI == "true" ]] && echo $(($(nproc) > 1 ? $(nproc) : 1)) || echo $(((($(nproc)-1)) > 1 ? (($(nproc)-1)) : 1))) && \
@@ -160,12 +158,12 @@ RUN source /ros_entrypoint.sh && \
     rm -rf rtabmap && \
     ldconfig
 
-# Rtabmap:
-## ros2 branch on 18 Dec 2023: 2f365ab7e10025c4d13b7855dfb4b7c8bb01f2d3
+# RTABMAP_ROS (UR VERSION)
+## 3.7.9.dev: cd22989d3db9aca76316884a3fbf68040e450806
 # Perception PCL:
 ## 2.4.1:  2b82545af3fda19eaa9bbed2a0f5d517bf23103f
 RUN apt-get update && mkdir -p ${ROS_ROOT}/src && cd ${ROS_ROOT}/src && \
-    git clone https://github.com/introlab/rtabmap_ros && cd rtabmap_ros && git checkout 2f365ab7e10025c4d13b7855dfb4b7c8bb01f2d3 && cd .. && \
+    git clone https://github.com/unlimited-robotics/rtabmap_ros && cd rtabmap_ros && git checkout cd22989d3db9aca76316884a3fbf68040e450806 && cd .. && \
     git clone https://github.com/ros-perception/perception_pcl && cd perception_pcl && git checkout 2b82545af3fda19eaa9bbed2a0f5d517bf23103f && cd .. &&\
     source ${ROS_ROOT}/install/setup.bash && \
     cd ${ROS_ROOT} && \

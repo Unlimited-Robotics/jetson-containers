@@ -72,4 +72,42 @@ RUN mkdir -p /opt/raya_os/tools/ && \
     cmake .. && \
     make
 
+# Install YDLidar-SDK
+# https://github.com/YDLIDAR/YDLidar-SDK
+RUN cd /opt && \
+    git clone https://github.com/YDLIDAR/YDLidar-SDK.git && \
+    cd YDLidar-SDK && \
+    mkdir build && cd build && cmake .. &&\
+    make && make install && \
+    cd ../.. && rm -r YDLidar-SDK/
+
+# Install YDLidar-ros2-driver
+# https://github.com/YDLIDAR/YDLidar-SDK
+# humble branch Jan 5 2024: aa9a97b070a1c700f95e5de9244c15c0f7028d76
+RUN mkdir -p ${ROS_ROOT}/src && cd ${ROS_ROOT}/src && \
+    git clone https://github.com/YDLIDAR/ydlidar_ros2_driver.git && \
+    cd ydlidar_ros2_driver && \
+    git checkout aa9a97b070a1c700f95e5de9244c15c0f7028d76 && \
+    cd ${ROS_ROOT} && \
+    source ${ROS_ROOT}/install/setup.bash && \
+    colcon build --merge-install && \
+    rm -rf src build log
+
+# Realsense calibration tool
+RUN UBUNTU_BASE=$(grep -oP '(?<=UBUNTU_CODENAME=)[^\s"]+' /etc/os-release) && \
+    sudo add-apt-repository "deb https://librealsense.intel.com/Debian/apt-repo ${UBUNTU_BASE} main" && \
+    sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-key F6E65AC044F831AC80A06380C8B3A55A6F3EFCDE || sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-key F6E65AC044F831AC80A06380C8B3A55A6F3EFCDE && \
+    sudo apt-get update && \
+    sudo apt-get install -y freeglut3 librscalibrationtool && \
+    rm -rf /var/lib/apt/lists/* && \
+    apt-get clean
+
+# Install C++ GPIO Port
+# https://github.com/pjueon/JetsonGPIO
+RUN cd /opt/raya_os/tools/ && \
+    git clone https://github.com/pjueon/JetsonGPIO.git && \
+    cd JetsonGPIO && \
+    mkdir build && cd build && cmake .. && \
+    make && make install
+
 COPY ros_entrypoint.sh /ros_entrypoint.sh
