@@ -163,7 +163,7 @@ RUN source /ros_entrypoint.sh && \
 # Perception PCL:
 ## 2.4.1:  2b82545af3fda19eaa9bbed2a0f5d517bf23103f
 RUN apt-get update && mkdir -p ${ROS_ROOT}/src && cd ${ROS_ROOT}/src && \
-    git clone https://github.com/unlimited-robotics/rtabmap_ros && cd rtabmap_ros && git checkout cd22989d3db9aca76316884a3fbf68040e450806 && cd .. && \
+    git clone https://github.com/unlimited-robotics/rtabmap_ros && cd rtabmap_ros && git checkout 1291afba4c6c20dd6dfb5bc218402da30f8fa90d && cd .. && \
     git clone https://github.com/ros-perception/perception_pcl && cd perception_pcl && git checkout 2b82545af3fda19eaa9bbed2a0f5d517bf23103f && cd .. &&\
     source ${ROS_ROOT}/install/setup.bash && \
     cd ${ROS_ROOT} && \
