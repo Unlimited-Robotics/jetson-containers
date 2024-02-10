@@ -43,14 +43,14 @@ RUN source /opt/ros/humble/install/setup.bash && \
     rosdep install -y --ignore-src --from-paths src --rosdistro ${ROS_DISTRO} \
         --skip-keys "fastcdr rti-connext-dds-6.0.1 rti-connext-dds-5.3.1 \
         urdfdom_headers libopencv-dev libopencv-contrib-dev \
-        libopencv-imgproc-dev python-opencv python3-opencv moveit_ros_benchmarks pilz_industrial_motion_planner \
+        libopencv-imgproc-dev python-opencv python3-opencv moveit_ros_benchmarks moveit_msgs pilz_industrial_motion_planner \
         $(ros2 pkg list | tr '\n' ' ')" && \
     rm -r src/moveit src/moveit_msgs && \
     cd ${ROS_ROOT}/src && \
     git clone https://github.com/Unlimited-Robotics/moveit2 && \
     cd ./moveit2/ && \
     git checkout 7eb951ec4db6d31af5f1495677a16dd9fd663778 && \
-    cd ../.. && \
+    cd .. && \
     git clone https://github.com/Unlimited-Robotics/moveit_msgs && \
     cd ./moveit_msgs/ && \
     git checkout 067829ecac4b3ee259a10fa7e2d5b17782f7bb0d && \

@@ -2,7 +2,7 @@
 # name: gary
 # group: base
 # depends: [pytorch, torchvision, torchaudio, torch2trt, opencv_ffmpeg, pycuda, realsense, zed, ros:humble-desktop, nav2, rtabmap, moveit]
-# postfix: 3.7.2.dev
+# postfix: 3.7.3.dev
 #---
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
@@ -46,7 +46,7 @@ RUN source /opt/ros/humble/install/setup.bash && \
     rosdep install -y --ignore-src --from-paths src --rosdistro ${ROS_DISTRO} \
         --skip-keys "fastcdr rti-connext-dds-6.0.1 rti-connext-dds-5.3.1 \
         urdfdom_headers libopencv-dev libopencv-contrib-dev \
-        libopencv-imgproc-dev python-opencv python3-opencv \
+        libopencv-imgproc-dev python-opencv python3-opencv moveit_msgs gripper_controllers \
         $(ros2 pkg list | tr '\n' ' ')" && \
     colcon build --merge-install --cmake-args -DCMAKE_BUILD_TYPE=Release \
         -DBUILD_TESTING=OFF -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
