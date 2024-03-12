@@ -46,15 +46,22 @@ RUN source /opt/ros/humble/install/setup.bash && \
         libopencv-imgproc-dev python-opencv python3-opencv moveit_ros_benchmarks moveit_msgs pilz_industrial_motion_planner \
         $(ros2 pkg list | tr '\n' ' ')" && \
     rm -r src/moveit src/moveit_msgs && \
+    apt-get remove -y libfcl-dev
+    
+RUN source /opt/ros/humble/install/setup.bash && \
     cd ${ROS_ROOT}/src && \
     git clone https://github.com/Unlimited-Robotics/moveit2 && \
     cd ./moveit2/ && \
-    git checkout 7eb951ec4db6d31af5f1495677a16dd9fd663778 && \
-    cd .. && \
+    git checkout 6fae6e7bb6db9b1aaaefc779a0ee208f0fd74a8d && \
+    cd ${ROS_ROOT}/src && \
     git clone https://github.com/Unlimited-Robotics/moveit_msgs && \
     cd ./moveit_msgs/ && \
-    git checkout 067829ecac4b3ee259a10fa7e2d5b17782f7bb0d && \
-    cd ../.. && \
+    git checkout 693578844ba57b7aa6292fcb9ee190431a7e5fe2 && \
+    cd ${ROS_ROOT}/src && \
+    git clone https://github.com/Unlimited-Robotics/fcl && \
+    cd ./fcl/ && \
+    git checkout 519c9a35a9bf72fb9fc6012535e26f8c236524d1 && \
+    cd ${ROS_ROOT} && \
     colcon build --merge-install --cmake-args -DCMAKE_BUILD_TYPE=Release \
         -DBUILD_TESTING=OFF -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
         --ament-cmake-args -DCMAKE_BUILD_TYPE=Release \

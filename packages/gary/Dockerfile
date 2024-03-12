@@ -2,7 +2,7 @@
 # name: gary
 # group: base
 # depends: [pytorch, torchvision, torchaudio, torch2trt, opencv_ffmpeg, pycuda, realsense, zed, ros:humble-desktop, nav2, rtabmap, moveit]
-# postfix: 3.7.3.dev
+# postfix: 3.7.14.dev
 #---
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
@@ -105,8 +105,9 @@ RUN UBUNTU_BASE=$(grep -oP '(?<=UBUNTU_CODENAME=)[^\s"]+' /etc/os-release) && \
 # Install C++ GPIO Port
 # https://github.com/pjueon/JetsonGPIO
 RUN cd /opt/raya_os/tools/ && \
-    git clone https://github.com/pjueon/JetsonGPIO.git && \
+    git clone -b v1.2.5 https://github.com/pjueon/JetsonGPIO.git && \
     cd JetsonGPIO && \
+    echo JEISON && \
     mkdir build && cd build && cmake .. && \
     make && make install
 
