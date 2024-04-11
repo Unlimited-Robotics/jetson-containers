@@ -31,7 +31,7 @@ RUN source /opt/ros/humble/install/setup.bash && \
         octomap \
         pcl_ros \
         pcl_conversions \
-        octomap_ros \
+        octomap_msgs \
         > packages_to_install.rosinstall && \
     ros2 pkg list > installed_packages.list && \
     /filter_ros_packages.py && \
