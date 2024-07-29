@@ -52,7 +52,7 @@ RUN source /opt/ros/humble/install/setup.bash && \
     cd ${ROS_ROOT}/src && \
     git clone https://github.com/Unlimited-Robotics/moveit2 && \
     cd ./moveit2/ && \
-    git checkout 6fae6e7bb6db9b1aaaefc779a0ee208f0fd74a8d && \
+    git checkout 436496546f08c163d6e9f6b00c2e3c357c53d3fd && \
     cd ${ROS_ROOT}/src && \
     git clone https://github.com/Unlimited-Robotics/moveit_msgs && \
     cd ./moveit_msgs/ && \
