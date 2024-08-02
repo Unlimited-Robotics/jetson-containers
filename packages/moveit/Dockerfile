@@ -62,13 +62,40 @@ RUN source /opt/ros/humble/install/setup.bash && \
     cd ./fcl/ && \
     git checkout 519c9a35a9bf72fb9fc6012535e26f8c236524d1 && \
     cd ${ROS_ROOT} && \
-    colcon build --merge-install --cmake-args -DCMAKE_BUILD_TYPE=Release \
-        -DBUILD_TESTING=OFF -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
-        --ament-cmake-args -DCMAKE_BUILD_TYPE=Release \
-        --packages-skip cyclonedds fastcdr fastrtps foonathan_memory_vendor \
-        google_benchmark_vendor gmock_vendor gtest_vendor iceoryx_binding_c \
-        iceoryx_hoofs iceoryx_posh osrf_testing_tools_cpp urdfdom \
-        urdfdom_headers $(ros2 pkg list | tr '\n' ' ') && \
+    colcon build \
+        --merge-install \
+        --cmake-args \
+        -DCMAKE_BUILD_TYPE=Release \
+        -DBUILD_TESTING=OFF \
+        -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
+        --ament-cmake-args \
+        -DCMAKE_BUILD_TYPE=Release \
+        --packages-select \
+            fcl \
+        && \
+    colcon build \
+        --merge-install \
+        --cmake-args \
+        -DCMAKE_BUILD_TYPE=Release \
+        -DBUILD_TESTING=OFF \
+        -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
+        --ament-cmake-args \
+        -DCMAKE_BUILD_TYPE=Release \
+        --packages-skip \
+            cyclonedds \
+            fastcdr \
+            fastrtps \
+            foonathan_memory_vendor \
+            google_benchmark_vendor \
+            gmock_vendor gtest_vendor \
+            iceoryx_binding_c \
+            iceoryx_hoofs \
+            iceoryx_posh \
+            osrf_testing_tools_cpp \
+            urdfdom \
+            urdfdom_headers \
+            $(ros2 pkg list | tr '\n' ' ') \
+        && \
     rm -Rf src build log ${ROS_ROOT}/ros2.${ROS_DISTRO}.ros_base.rosinstall && \
     rm -Rf /var/lib/apt/lists/* && \
     apt-get clean

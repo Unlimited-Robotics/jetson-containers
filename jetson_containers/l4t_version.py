@@ -71,7 +71,10 @@ def get_l4t_version(version_file='/etc/nv_tegra_release'):
     l4t_revision = l4t_revision[len(l4t_revision_prefix):]
     
     # return packaging.version object
-    return Version(f'{l4t_release}.{l4t_revision}')
+
+    return Version(f'35.2.1')
+
+    # return Version(f'{l4t_release}.{l4t_revision}')
     
  
 def get_jetpack_version(l4t_version=get_l4t_version(), default='5.1'):
